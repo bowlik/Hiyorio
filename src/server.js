@@ -38,8 +38,27 @@ function decodeConfig(segment) {
 }
 
 // Přihlášení jménem a heslem k Hiyori nabízí jen server, kterému uživatelé
-// mohou heslo svěřit (ideálně provozovaný přímo Hiyori). Jinak jen API klíč.
+// mohou heslo svěřit (ideálně provozovaný přímo Hiyori), a vždy addon
+// spuštěný na vlastním počítači – tam heslo nikam neodchází.
 const LOGIN_ENABLED = process.env.ENABLE_LOGIN === '1';
+
+const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
+
+// Požadavek přímo z tohoto počítače, ne přes reverzní proxy (ta nastavuje
+// X-Forwarded-For a veřejný Host, i když běží na stejném stroji).
+function isLocalRequest(req) {
+  const host = String(req.headers.host || '').replace(/:\d+$/, '').toLowerCase();
+  return (
+    LOOPBACK.has(req.socket.remoteAddress) &&
+    !req.headers['x-forwarded-for'] &&
+    !req.headers.forwarded &&
+    ['127.0.0.1', 'localhost', '[::1]'].includes(host)
+  );
+}
+
+function loginAllowed(req) {
+  return LOGIN_ENABLED || isLocalRequest(req);
+}
 
 // Jednoduchý limit pokusů o přihlášení na IP, aby přes addon nešlo hádat
 // hesla k Hiyori.
@@ -94,14 +113,14 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', version: manifest.version, mapping: mappingStatus() });
 });
 app.get(['/configure', '/:config/configure'], (req, res) => {
-  res.type('html').send(configurePage(publicBaseUrl(req), manifest, { loginEnabled: LOGIN_ENABLED }));
+  res.type('html').send(configurePage(publicBaseUrl(req), manifest, { loginEnabled: loginAllowed(req) }));
 });
 
 // Konfigurační stránka sem pošle jméno a heslo k Hiyori a dostane zpět
 // API klíč. Heslo se neukládá ani neloguje.
 app.post('/api/login', express.json({ limit: '2kb' }), async (req, res) => {
   res.set('Cache-Control', 'no-store');
-  if (!LOGIN_ENABLED) return res.status(404).json({ error: 'Přihlášení heslem je na tomto serveru vypnuté.' });
+  if (!loginAllowed(req)) return res.status(404).json({ error: 'Přihlášení heslem je na tomto serveru vypnuté.' });
   if (loginLimited(req.ip)) {
     return res.status(429).json({ error: 'Příliš mnoho pokusů. Zkus to znovu za 15 minut.' });
   }
