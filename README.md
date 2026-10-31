@@ -90,6 +90,27 @@ Stremio ──GET /{config}/sub/{id}.srt──▶ addon ─(GET /v2/subtitles/{i
 
 Potřebné scopes na Hiyori: `anime.read`, `subtitles.read` a `subtitles.download`.
 
+## Plány
+
+Co by se mohlo objevit dál. Nic z toho není slíbené, záleží na zájmu a domluvě:
+
+- **Generování API klíče na profilu Hiyori**: až to Hiyori spustí, přibude tlačítko „Přidat do Stremia“, které rovnou vytvoří odkaz na addon.
+- **Titulky z webů tvůrců**: jen po dohodě s konkrétními fansuby, ideálně tak, aby jim to přivádělo návštěvnost, ne aby o ni přišli.
+- **Kodi**: addon na titulky pro lokální knihovny.
+- **Plex, Jellyfin, Emby**: přes provider pro [Bazarr](https://www.bazarr.media/), případně plugin pro Jellyfin.
+- **Lepší popisky**: název fansubu u titulků ve Stremiu.
+- **Oficiální provoz u Hiyori**: addon je připravený na nasazení (viz [docs/NASAZENI.md](docs/NASAZENI.md)).
+
+## Nápady a zpětná vazba
+
+Chyby, nápady i připomínky piš do [Issues](https://github.com/bowlik/Hiyorio/issues/new/choose). Jsou tam šablony pro:
+
+- **Chybu**: titulky se nenačetly, nesedí, něco spadlo.
+- **Nápad nebo rozšíření**: nové funkce, další platformy (Kodi, Plex, Jellyfin…).
+- **Tvůrce překladů**: fansuby, které chtějí (nebo nechtějí) mít titulky v addonu, nebo mají připomínky.
+
+**Do issue nikdy nevkládej svůj API klíč ani odkaz na nainstalovaný addon**, protože je v něm klíč.
+
 ## Známá omezení
 
 - **API klíč je v URL addonu.** Kdo má odkaz na nainstalovaný addon, má i klíč. Odkaz proto nikomu neposílej. Klíč platí 3 měsíce, potom addon nainstaluj znovu.
