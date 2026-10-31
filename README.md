@@ -103,13 +103,15 @@ Co by se mohlo objevit dál. Nic z toho není slíbené, záleží na zájmu a d
 
 ## Nápady a zpětná vazba
 
-Chyby, nápady i připomínky piš do [Issues](https://github.com/bowlik/Hiyorio/issues/new/choose). Jsou tam šablony pro:
+Nápady, dotazy a připomínky piš do [Diskuze](https://github.com/bowlik/Hiyorio/discussions). Můžeš tam založit vlákno, komentovat ostatní a hlasovat. Hodí se třeba:
 
-- **Chybu**: titulky se nenačetly, nesedí, něco spadlo.
-- **Nápad nebo rozšíření**: nové funkce, další platformy (Kodi, Plex, Jellyfin…).
-- **Tvůrce překladů**: fansuby, které chtějí (nebo nechtějí) mít titulky v addonu, nebo mají připomínky.
+- nápady na nové funkce a další platformy (Kodi, Plex, Jellyfin…),
+- dotazy k nastavení a provozu,
+- vzkazy od tvůrců překladů, kteří chtějí (nebo nechtějí) mít titulky v addonu.
 
-**Do issue nikdy nevkládej svůj API klíč ani odkaz na nainstalovaný addon**, protože je v něm klíč.
+Konkrétní chyby můžeš nahlásit v [Issues](https://github.com/bowlik/Hiyorio/issues).
+
+**Nikdy nikam nevkládej svůj API klíč ani odkaz na nainstalovaný addon**, protože je v něm klíč.
 
 ## Známá omezení
 
