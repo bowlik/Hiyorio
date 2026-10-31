@@ -1,0 +1,28 @@
+{
+  "name": "hiyorio",
+  "version": "0.1.0",
+  "description": "Neoficiální Stremio addon pro české a slovenské titulky z Hiyori.cz (API v2)",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node --use-system-ca --env-file-if-exists=.env src/server.js",
+    "dev": "node --use-system-ca --env-file-if-exists=.env --watch src/server.js",
+    "test": "node --test \"test/*.test.js\"",
+    "get-key": "node --use-system-ca scripts/get-api-key.mjs",
+    "smoke": "node --use-system-ca --env-file-if-exists=.env scripts/smoke.mjs",
+    "install-link": "node scripts/install-link.mjs",
+    "bg:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows/hiyorio.ps1 start",
+    "bg:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows/hiyorio.ps1 stop",
+    "bg:status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows/hiyorio.ps1 status",
+    "autostart": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows/hiyorio.ps1 install",
+    "autostart:remove": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/windows/hiyorio.ps1 remove"
+  },
+  "engines": {
+    "node": ">=22.15"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "express": "^4.21.2"
+  },
+  "license": "MIT"
+}
