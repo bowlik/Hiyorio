@@ -24,7 +24,7 @@ npm start
 
 Pak otevři <http://127.0.0.1:7000/configure> a projdi čtyři kroky:
 
-1. **API klíč z Hiyori**: vložíš svůj klíč. Pokud server běží s `ENABLE_LOGIN=1`, můžeš se místo toho přihlásit jménem a heslem a server si klíč vyžádá sám.
+1. **Přihlášení k Hiyori**: zadáš jméno a heslo k Hiyori a addon si z nich vyžádá tvůj API klíč. Nebo vložíš klíč, který už máš. Na vlastním počítači je přihlášení zapnuté vždy, na veřejném serveru jen s `ENABLE_LOGIN=1`.
 2. **Nastavení**: jazyky titulků (čeština, slovenština).
 3. **Souhlas**: použití klíče a upozornění, že odkaz addonu klíč obsahuje.
 4. **Vytvořit odkaz**: **Nainstalovat do Stremia** (na HTTPS serveru), nebo zkopírovat odkaz.
@@ -53,7 +53,7 @@ Log serveru je v `logs/server.log`. Po aktualizaci kódu spusť `npm run bg:stop
 
 ### API klíč
 
-Když už máš od Hiyori povolený přístup, spusť `npm run get-key`. Skript se zeptá na jméno a heslo k Hiyori a klíč uloží do `.env`. Heslo se nikam neukládá a `.env` je v `.gitignore`.
+Klíč nikdo nepřiděluje ručně. Administrátoři Hiyori jen **povolí přístup k API** u tvého účtu (o to je zatím potřeba požádat, později si ho zapneš sám v profilu). Klíč si pak vyžádáš přihlášením přes `POST /v2/login/get-api-key`. To za tebe udělá konfigurační stránka, nebo `npm run get-key`, který klíč uloží do `.env`. Heslo se nikam neukládá a `.env` je v `.gitignore`.
 
 ### Testy
 
@@ -68,7 +68,7 @@ Všechny skripty spouštějí Node s `--use-system-ca`, takže fungují i s anti
 |---|---|---|
 | `PORT` | `7000` | Port serveru |
 | `PUBLIC_URL` | podle požadavku | Veřejná adresa addonu, např. `https://hiyori-addon.example.com`. Nastav ji, když běžíš za proxy. |
-| `ENABLE_LOGIN` | vypnuto | `1` zapne přihlášení jménem a heslem k Hiyori (jen na důvěryhodném serveru) |
+| `ENABLE_LOGIN` | vypnuto | `1` zapne přihlášení jménem a heslem k Hiyori i pro požadavky odjinud (jen na důvěryhodném serveru). Na vlastním počítači (`127.0.0.1`, `localhost`) je zapnuté vždy. |
 | `ADDON_ID`, `ADDON_NAME` | `community.hiyorio`, `Hiyorio` | ID a název addonu ve Stremiu |
 | `HIYORI_API_URL` | `https://api.hiyori.cz` | Adresa Hiyori API |
 | `DATA_DIR` | `./data` | Kam se ukládá mapovací databáze |

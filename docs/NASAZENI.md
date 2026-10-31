@@ -8,7 +8,7 @@ Návod pro toho, kdo chce Hiyorio provozovat: lokálně na vyzkoušení, nebo na
 Uživatel ──(Stremio)──▶ server Hiyorio ──(API klíč uživatele)──▶ api.hiyori.cz
 ```
 
-- Server **nemá vlastní klíč**. Uživatel na konfigurační stránce (`/configure`) vloží svůj API klíč. Pokud provozovatel zapne `ENABLE_LOGIN=1`, může se místo toho přihlásit jménem a heslem k Hiyori a server přes `POST /v2/login/get-api-key` získá jeho API klíč sám a ten se uloží do URL addonu (`/{config}/manifest.json`, kde `config` je base64url JSON `{"apiKey":"…","langs":["CZ","SK"]}`). Heslo se neukládá ani neloguje.
+- Server **nemá vlastní klíč**. Uživatel na konfigurační stránce (`/configure`) vloží svůj API klíč. Pokud provozovatel zapne `ENABLE_LOGIN=1` (a vždy, když addon běží na vlastním počítači), může se místo toho přihlásit jménem a heslem k Hiyori a server přes `POST /v2/login/get-api-key` získá jeho API klíč sám a ten se uloží do URL addonu (`/{config}/manifest.json`, kde `config` je base64url JSON `{"apiKey":"…","langs":["CZ","SK"]}`). Heslo se neukládá ani neloguje.
 - Server s tímto klíčem volá Hiyori API, převádí ID ze Stremia na MAL ID a stahuje titulky. Stremio totiž neumí poslat hlavičku `Authorization`.
 - Server si nic neukládá do databáze. Drží jen cache v paměti a mapovací databázi anime ([Fribb/anime-lists](https://github.com/Fribb/anime-lists), ~7,5 MB) v `DATA_DIR`. Tu si sám stáhne při startu a jednou denně ji obnoví.
 
@@ -23,8 +23,8 @@ npm install
 npm start
 ```
 
-1. Otevři <http://127.0.0.1:7000/configure> a vlož svůj Hiyori API klíč.
-2. Klikni na **Zkopírovat odkaz pro Stremio**.
+1. Otevři <http://127.0.0.1:7000/configure> a přihlas se jménem a heslem k Hiyori, nebo vlož API klíč. Na vlastním počítači je přihlášení zapnuté vždy.
+2. Zvol jazyky, odsouhlas podmínky a klikni na **Vytvořit odkaz** a pak na **Zkopírovat odkaz pro Stremio**.
 3. Ve Stremiu: **Addons** → vlož odkaz do vyhledávání addonů → **Install**.
 
 Lokálně to běží přes `http`, takže to funguje jen ve Stremiu na tomtéž počítači. Stremio na mobilu nebo TV potřebuje `https`.
@@ -75,7 +75,7 @@ Na Renderu ve free tarifu server po 15 minutách nečinnosti usne a první načt
 | `PUBLIC_URL` | podle požadavku | Veřejná adresa, ze které se skládají odkazy na titulky. **Na serveru za proxy ji nastav.** |
 | `ADDON_ID` | `community.hiyorio` | ID addonu ve Stremiu. Při změně ho uživatelé musí nainstalovat znovu. |
 | `ADDON_NAME` | `Hiyorio` | Název addonu ve Stremiu (např. pro oficiální verzi) |
-| `ENABLE_LOGIN` | vypnuto | `1` zapne přihlášení jménem a heslem k Hiyori na konfigurační stránce. **Zapínej jen na serveru, kterému uživatelé mohou heslo svěřit** (ideálně provozovaném přímo Hiyori). Bez toho stránka nabízí jen vložení API klíče. |
+| `ENABLE_LOGIN` | vypnuto | `1` zapne přihlášení jménem a heslem k Hiyori na konfigurační stránce. **Zapínej jen na serveru, kterému uživatelé mohou heslo svěřit** (ideálně provozovaném přímo Hiyori). Bez toho stránka nabízí jen vložení API klíče. Požadavky přímo z `127.0.0.1`/`localhost` (bez `X-Forwarded-For`) mají přihlášení vždy. |
 | `TRUST_PROXY` | – | Za reverzní proxy nastav `1`, aby limit pokusů o přihlášení (10 za 15 min na IP) počítal se skutečnou IP uživatele |
 | `HIYORI_API_URL` | `https://api.hiyori.cz` | Adresa Hiyori API |
 | `DATA_DIR` | `./data` | Kam se ukládá mapovací databáze |

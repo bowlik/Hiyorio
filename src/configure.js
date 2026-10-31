@@ -67,8 +67,8 @@ export function configurePage(baseUrl, manifest, { loginEnabled = false } = {}) 
     <p class="msg" id="login-msg" hidden></p>
     <small>${
       loginEnabled
-        ? 'Heslo se použije jen k získání API klíče z Hiyori a nikam se neukládá. Přístup k API musí mít tvůj účet povolený od administrátorů Hiyori.'
-        : 'API klíč ti vydají administrátoři Hiyori (později si ho vygeneruješ na svém profilu). Heslo k Hiyori sem nikdy nezadávej.'
+        ? 'Addon si s tvým jménem a heslem vyžádá API klíč přímo z Hiyori. Heslo nikam neukládá. Přístup k API ti musí povolit administrátoři Hiyori (později si ho zapneš sám v profilu).'
+        : 'Přístup k API ti povolí administrátoři Hiyori (později si ho zapneš sám v profilu). Klíč pak získáš přihlášením v addonu spuštěném u sebe, nebo příkazem npm run get-key. Heslo k Hiyori na cizí server nezadávej.'
     }</small>
   </section>
 
