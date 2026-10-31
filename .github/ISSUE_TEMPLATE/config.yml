@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Přístup k Hiyori API (API klíč)
+    url: https://hiyori.cz/
+    about: O přístup k API žádej administrátory Hiyori, ne tady.

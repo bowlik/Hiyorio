@@ -1,0 +1,26 @@
+name: Pro tvůrce překladů
+description: Jsi z fansubu a chceš, aby (ne)byly tvoje titulky v addonu, nebo máš připomínku k tomu, jak se zobrazují
+labels: [tvůrci]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Addon nabízí jen titulky, které jsou nahrané přímo na [Hiyori](https://hiyori.cz/). Titulky, které jsou na Hiyori jen jako odkaz na váš web, se nestahují. Pokud chcete, aby vaše titulky byly v addonu, nejjednodušší je nahrávat je přímo na Hiyori. Když vám jde o něco jiného, napište nám.
+  - type: input
+    id: fansub
+    attributes:
+      label: Fansub / skupina
+    validations:
+      required: true
+  - type: textarea
+    id: zprava
+    attributes:
+      label: Co byste chtěli
+      description: Např. jak zobrazovat váš název u titulků, jestli můžeme odkazovat na váš web, připomínky…
+    validations:
+      required: true
+  - type: input
+    id: kontakt
+    attributes:
+      label: Kontakt (nepovinné)
+      description: Kde vás najdeme, pokud se budeme chtít domluvit (web, Discord…).
