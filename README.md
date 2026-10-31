@@ -86,7 +86,7 @@ addon: GET /v2/subtitles/anime/{id} → filtr na epizodu 5 → seznam URL
 Stremio ──GET /{config}/sub/{id}.srt──▶ addon ─(GET /v2/subtitles/{id}/download + Bearer)─▶ SRT
 ```
 
-`{config}` je base64url JSON `{"apiKey":"…"}`. Stremio sám neumí poslat autorizační hlavičku, a proto addon soubory s titulky stahuje sám a předává je dál.
+`{config}` je base64url JSON `{"apiKey":"…","langs":["CZ","SK"]}`. Stremio sám neumí poslat autorizační hlavičku, a proto addon soubory s titulky stahuje sám a předává je dál.
 
 Potřebné scopes na Hiyori: `anime.read`, `subtitles.read` a `subtitles.download`.
 
@@ -94,6 +94,6 @@ Potřebné scopes na Hiyori: `anime.read`, `subtitles.read` a `subtitles.downloa
 
 - **API klíč je v URL addonu.** Kdo má odkaz na nainstalovaný addon, má i klíč. Odkaz proto nikomu neposílej. Klíč platí 3 měsíce, potom addon nainstaluj znovu.
 - Při převodu z ASS se ztratí styly, pozicování a typesety.
-- Titulky, které jsou na Hiyori jen jako odkaz na externí web (vyplněné `url`), stáhnout nejdou, a addon je proto vůbec nenabízí.
+- Titulky, které jsou na Hiyori jen jako odkaz na externí web (vyplněné `url`), stáhnout nejdou, a addon je proto vůbec nenabízí. Do budoucna se to může změnit, ale jen po dohodě s tvůrci překladů (fansuby). Pokud jsi tvůrce a chceš, aby tvoje titulky byly v addonu, nejjednodušší je nahrávat je přímo na Hiyori. Případně se ozvi (viz [Nápady a zpětná vazba](#nápady-a-zpětná-vazba)).
 - Mapování IMDb sezón nemusí sedět u seriálů, kde se TVDB/TMDB a MAL dělí na sezóny výrazně jinak.
 - Neplatný klíč se ve Stremiu neprojeví chybou, seznam titulků je prostě prázdný. Chyba se objeví jen v logu serveru.
