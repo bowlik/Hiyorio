@@ -1,6 +1,6 @@
 {
   "name": "hiyorio",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Neoficiální Stremio addon pro české a slovenské titulky z Hiyori.cz (API v2)",
   "type": "module",
   "main": "src/server.js",

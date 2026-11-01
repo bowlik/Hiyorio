@@ -10,7 +10,7 @@ const PORT = Number(process.env.PORT) || 7000;
 // oficiální verzi Hiyori) bez úprav kódu.
 const manifest = {
   id: process.env.ADDON_ID || 'community.hiyorio',
-  version: '0.1.1',
+  version: '0.1.2',
   name: process.env.ADDON_NAME || 'Hiyorio',
   description:
     'Neoficiální addon: české a slovenské titulky k anime z Hiyori.cz. Vyžaduje vlastní API klíč s přístupem schváleným administrátory Hiyori.',
