@@ -147,17 +147,19 @@ export function getAnimeByMalId(apiKey, malId) {
 }
 
 // Seznam titulků je stránkovaný (max. 50 na stránku) a seřazený od
-// nejnovějších, tedy zhruba od posledních epizod. U dlouhých seriálů
-// (One Piece má přes 20 stránek) by načtení všeho vyčerpalo limit API
-// (30 požadavků za minutu), proto se při zadané epizodě končí na stránce,
-// kde už jsou jen starší epizody.
+// nejnovějších, tedy zhruba od posledních epizod. Při zadané epizodě ho
+// filtruje už API (?episode=), takže stačí jeden požadavek. Kdyby filtr
+// nefungoval, končí se aspoň na stránce, kde už jsou jen starší epizody –
+// načtení všeho by u dlouhých seriálů (One Piece má přes 20 stránek)
+// vyčerpalo limit API (30 požadavků za minutu).
 const PAGE_SIZE = 50;
 const MAX_PAGES = 50;
 const EPISODE_MARGIN = 2;
 
-function getSubtitlePage(apiKey, hiyoriAnimeId, page) {
-  return subtitlePages.getOrLoad(`${hiyoriAnimeId}:${page}`, () =>
-    request(apiKey, `/v2/subtitles/anime/${hiyoriAnimeId}?page=${page}&page_size=${PAGE_SIZE}`, {
+function getSubtitlePage(apiKey, hiyoriAnimeId, page, episode) {
+  const filter = episode === undefined ? '' : `&episode=${episode}`;
+  return subtitlePages.getOrLoad(`${hiyoriAnimeId}:${episode ?? ''}:${page}`, () =>
+    request(apiKey, `/v2/subtitles/anime/${hiyoriAnimeId}?page=${page}&page_size=${PAGE_SIZE}${filter}`, {
       envelope: true,
     }),
   );
@@ -168,7 +170,7 @@ export async function getSubtitlesForAnime(apiKey, hiyoriAnimeId, { episode } = 
   for (let page = 1; page <= MAX_PAGES; page++) {
     let body;
     try {
-      body = await getSubtitlePage(apiKey, hiyoriAnimeId, page);
+      body = await getSubtitlePage(apiKey, hiyoriAnimeId, page, episode);
     } catch (err) {
       // Bez první stránky není co nabídnout; jinak stačí to, co už máme.
       if (page === 1) throw err;
