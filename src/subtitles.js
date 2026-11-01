@@ -49,7 +49,7 @@ export async function findSubtitles(apiKey, stremioId, { filename } = {}) {
   const picked = await pickAnime(apiKey, resolved);
   if (!picked) return [];
 
-  const all = (await getSubtitlesForAnime(apiKey, picked.anime.id)).filter(
+  const all = (await getSubtitlesForAnime(apiKey, picked.anime.id, { episode: picked.episode })).filter(
     (s) => !isExternal(s) && !brokenIds.get(String(s.id)),
   );
   const subs =

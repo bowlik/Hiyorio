@@ -21,7 +21,7 @@ const blockedUntil = new Map();
 // Metadata (anime, seznamy titulků) nejsou vázaná na uživatele, proto se
 // cachují společně. Přístup k nim se ale vždy podmiňuje platným tokenem.
 const animeByMal = new TtlCache({ ttlMs: 6 * 60 * 60 * 1000, maxEntries: 5000 });
-const subtitlesByAnime = new TtlCache({ ttlMs: 15 * 60 * 1000, maxEntries: 2000 });
+const subtitlePages = new TtlCache({ ttlMs: 15 * 60 * 1000, maxEntries: 5000 });
 
 async function parseError(res) {
   let body = null;
@@ -106,7 +106,7 @@ export async function getToken(apiKey) {
   }
 }
 
-async function request(apiKey, path, { raw = false, retried = false } = {}) {
+async function request(apiKey, path, { raw = false, envelope = false, retried = false } = {}) {
   checkBlocked(apiKey);
   const token = await getToken(apiKey);
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -120,7 +120,7 @@ async function request(apiKey, path, { raw = false, retried = false } = {}) {
   if (res.status === 401 && !retried) {
     // token mohl expirovat dřív, než jsme čekali
     tokens.delete(apiKey);
-    return request(apiKey, path, { raw, retried: true });
+    return request(apiKey, path, { raw, envelope, retried: true });
   }
   if (res.status === 404) return null;
   if (!res.ok) {
@@ -130,7 +130,7 @@ async function request(apiKey, path, { raw = false, retried = false } = {}) {
   }
   if (raw) return Buffer.from(await res.arrayBuffer());
   const body = await res.json();
-  return body?.data ?? null;
+  return envelope ? body : (body?.data ?? null);
 }
 
 export function getAnimeById(apiKey, hiyoriAnimeId) {
@@ -146,11 +146,40 @@ export function getAnimeByMalId(apiKey, malId) {
   return animeByMal.getOrLoad(String(malId), () => request(apiKey, `/v2/anime/mal/${malId}`));
 }
 
-export async function getSubtitlesForAnime(apiKey, hiyoriAnimeId) {
-  const list = await subtitlesByAnime.getOrLoad(String(hiyoriAnimeId), () =>
-    request(apiKey, `/v2/subtitles/anime/${hiyoriAnimeId}`),
+// Seznam titulků je stránkovaný (max. 50 na stránku) a seřazený od
+// nejnovějších, tedy zhruba od posledních epizod. U dlouhých seriálů
+// (One Piece má přes 20 stránek) by načtení všeho vyčerpalo limit API
+// (30 požadavků za minutu), proto se při zadané epizodě končí na stránce,
+// kde už jsou jen starší epizody.
+const PAGE_SIZE = 50;
+const MAX_PAGES = 50;
+const EPISODE_MARGIN = 2;
+
+function getSubtitlePage(apiKey, hiyoriAnimeId, page) {
+  return subtitlePages.getOrLoad(`${hiyoriAnimeId}:${page}`, () =>
+    request(apiKey, `/v2/subtitles/anime/${hiyoriAnimeId}?page=${page}&page_size=${PAGE_SIZE}`, {
+      envelope: true,
+    }),
   );
-  return Array.isArray(list) ? list : [];
+}
+
+export async function getSubtitlesForAnime(apiKey, hiyoriAnimeId, { episode } = {}) {
+  const items = [];
+  for (let page = 1; page <= MAX_PAGES; page++) {
+    let body;
+    try {
+      body = await getSubtitlePage(apiKey, hiyoriAnimeId, page);
+    } catch (err) {
+      // Bez první stránky není co nabídnout; jinak stačí to, co už máme.
+      if (page === 1) throw err;
+      break;
+    }
+    const data = Array.isArray(body?.data) ? body.data : [];
+    items.push(...data);
+    if (!body?.pagination?.has_next) break;
+    if (episode !== undefined && data.every((s) => Number(s.episode) < episode - EPISODE_MARGIN)) break;
+  }
+  return items;
 }
 
 export function downloadSubtitle(apiKey, subtitleId) {
